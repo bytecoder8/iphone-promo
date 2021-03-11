@@ -2,6 +2,8 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  let selectedPhoneTitle = ''
+
   const tabs = data => {
     const cardDetailChangeList = document.querySelectorAll('.card-details__change')
     const cardTitleElement = document.querySelector('.card-details__title')
@@ -17,6 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
       } )
     }
   
+    selectedPhoneTitle = cardTitleElement.textContent
+
     cardDetailChangeList.forEach( (btn, index) => {
       btn.addEventListener('click', event => {
         event.preventDefault()
@@ -29,6 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
         cardImageElement.alt = data[index].name
         cardPriceElement.textContent = data[index].price.toLocaleString() + '₽'
         cardMemoryElement.textContent = data[index].memory
+
+        selectedPhoneTitle = cardTitleElement.textContent
       })
     })
   }
@@ -79,10 +85,38 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
+  const modal = () => {   
+    const modalElement = document.querySelector('.modal')
+    const modalBlock = document.querySelector('.modal__block')
+    const closeButton = document.querySelector('.modal__close')
+    const openButton = document.querySelector('.button_buy')
+    const titleElement = document.querySelector('.modal__title')
+
+    modalElement.addEventListener('click', () => {
+      modalElement.classList.remove('open')
+    })
+    // Клик по самому блоку модального окна запрещает всплытие до родителя
+    modalBlock.addEventListener('click', event => {
+      event.stopPropagation()
+    })
+    
+    openButton.addEventListener('click', event => {
+      event.preventDefault()
+      modalElement.classList.add('open')
+      titleElement.textContent = selectedPhoneTitle
+    })
+    closeButton.addEventListener('click', event => {
+      event.preventDefault()
+      modalElement.classList.remove('open')
+    })
+  }
+
+
   fetch('tabs.json')
     .then(response => response.json())
     .then(json => tabs(json))
     .catch(error => alert('Произошла ошибка: ' + error.toString()))
 
   accordion()
+  modal()
 })
