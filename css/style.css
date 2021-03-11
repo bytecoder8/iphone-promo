@@ -412,6 +412,12 @@ h1, h2, h3, p, ul {
     padding: 12px 30px;
     background-color: transparent;
     text-align: left;
+
+    border-radius: 5px;
+}
+
+.characteristics__title.active {
+    border-radius: 5px 5px 0 0;
 }
 
 .characteristics__title:after {
@@ -424,7 +430,7 @@ h1, h2, h3, p, ul {
     border: 1px solid;
     border-color: transparent #000 #000 transparent;
     transform: rotate(45deg);
-    transition: border-color 0.5s ease-in-out, bottom 0.5s ease-in-out;
+    transition: border-color 0.4s ease-in-out, bottom 0.4s ease-in-out;
 }
 
 .characteristics__title.active:after {
@@ -434,15 +440,13 @@ h1, h2, h3, p, ul {
 
 .characteristics__description {
     margin-top: -2px;
-    border: 1px solid;
-    border-color: transparent #000 #000 #000;
+    border: 1px solid #000;
+    border-top-style: hidden;
+    border-radius: 0 0 5px 5px;
+
     height: 0;
     overflow: hidden;
-    transition: height 0.5s ease-in-out;
-}
-
-.characteristics__title:focus {
-    outline:none;
+    transition: height 0.4s ease-in-out;
 }
 
 .characteristics__description.active {
