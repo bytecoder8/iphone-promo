@@ -2,15 +2,27 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  const getData = (url) => { 
-    return fetch(url)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Ответ сервера: ' + response.status)
+  const getData = (url, handleSuccess, handleError) => { 
+    const request = new XMLHttpRequest()
+    request.open('GET', url, true)
+    request.onload = function() {
+      if (this.status >= 200 && this.status < 400) {
+        try {
+          const data = JSON.parse(this.response)
+          handleSuccess(data)
+        } catch (error) {
+          handleError(error)
         }
-        return response.json()
-      })
+      } else {
+        handleError(new Error('Bad server response: ' + this.status))
+      }
+    }
+    request.onerror = function() {
+      handleError(new Error('Unknown network error'))
+    }
+    request.send()
   }
+
   const shuffle = (arr) => {
     const result = arr.slice()
     for (let i = result.length - 1; i > 0; i--) {
@@ -185,15 +197,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     showMoreButton.addEventListener('click', showMore)
 
-    getData('cross-sell-dbase/dbase.json')
-      .then(items => createRelatedProductsList(items))
-      .catch(error => alert('Произошла ошибка: ' + error.toString()))
+    getData(
+      'cross-sell-dbase/dbase.json', 
+      items => createRelatedProductsList(items),
+      error => alert(error.toString())
+    )
   }
 
-
-  getData('tabs.json')
-    .then(objects => tabs(objects))
-    .catch(error => alert('Произошла ошибка: ' + error.toString()))
+  getData(
+    'tabs.json', 
+    items => tabs(items),
+    error => alert(error.toString())
+  )
 
   accordion()
   modal()
