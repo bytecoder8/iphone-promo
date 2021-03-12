@@ -2,8 +2,6 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  let selectedPhoneTitle = ''
-
   const tabs = data => {
     const cardDetailChangeList = document.querySelectorAll('.card-details__change')
     const cardTitleElement = document.querySelector('.card-details__title')
@@ -19,8 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
       } )
     }
   
-    selectedPhoneTitle = cardTitleElement.textContent
-
     cardDetailChangeList.forEach( (btn, index) => {
       btn.addEventListener('click', event => {
         event.preventDefault()
@@ -33,8 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
         cardImageElement.alt = data[index].name
         cardPriceElement.textContent = data[index].price.toLocaleString() + '₽'
         cardMemoryElement.textContent = data[index].memory
-
-        selectedPhoneTitle = cardTitleElement.textContent
       })
     })
   }
@@ -88,12 +82,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const modal = () => {   
     const modalRootElement = document.querySelector('.modal')
     const closeButton = document.querySelector('.modal__close')
-    const openButton = document.querySelector('.button_buy')
+    const openButton = document.querySelector('.card-details__button_buy')
+    const openButton2 = document.querySelector('.card-details__button_delivery')
     const titleElement = document.querySelector('.modal__title')
+    const subtitleElement = document.querySelector('.modal__subtitle')
 
-    const open = () => {
+    const selectedProductElement = document.querySelector('[name="selectedProduct"]')
+    const cardDetailsTitleElement = document.querySelector('.card-details__title')
+
+
+    const open = ({ target }) => {
       modalRootElement.classList.add('open')
       document.addEventListener('keydown', handleEscapeKey)
+
+      selectedProductElement.value = cardDetailsTitleElement.textContent
+      titleElement.textContent = cardDetailsTitleElement.textContent
+
+      if ('buySubtitle' in target.dataset) {
+        subtitleElement.textContent = target.dataset.buySubtitle
+      }
+
+      document.querySelector('.modal__input').focus()
     }
 
     const close = () => {
@@ -113,11 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     })
     
-    openButton.addEventListener('click', event => {
-      event.preventDefault()
-      titleElement.textContent = selectedPhoneTitle
-      open()
-    })
+    openButton.addEventListener('click', open)
+    openButton2.addEventListener('click', open)
   }
 
 
