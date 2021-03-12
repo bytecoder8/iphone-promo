@@ -146,8 +146,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
+  let allRelatedProducts = []
   const renderRelatedProducts = () => {
+    const PRODUCTS_COUNT = 4
     const relatedProductsList = document.querySelector('.cross-sell__list')
+    const showMoreButton = document.querySelector('.cross-sell__show-more')
 
     const createRelatedProduct = (item) => {
       const liElement = document.createElement('li')
@@ -162,12 +165,25 @@ document.addEventListener('DOMContentLoaded', () => {
       return liElement
     }
 
-    const createRelatedProductsList = (items) => {
-      const randomItems = shuffle(items).slice(0, 4)
-      randomItems.forEach(item => {
+    const render = (items) => {
+      items.forEach(item => {
         relatedProductsList.append(createRelatedProduct(item))
       })
     }
+
+    const createRelatedProductsList = (items) => {
+      allRelatedProducts = allRelatedProducts.concat(shuffle(items))
+
+      render(allRelatedProducts.splice(0, PRODUCTS_COUNT))
+    }
+
+    const showMore = (event) => {
+      render(allRelatedProducts.splice(0, PRODUCTS_COUNT))
+      if (allRelatedProducts.length === 0) {
+        showMoreButton.style.display = 'none'
+      }
+    }
+    showMoreButton.addEventListener('click', showMore)
 
     getData('cross-sell-dbase/dbase.json')
       .then(items => createRelatedProductsList(items))

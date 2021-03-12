@@ -522,8 +522,13 @@ h1, h2, h3, p, ul {
     font-weight: 700;
     font-size: 18px;
     line-height: 32px;
-
 }
+
+.cross-sell__show-more {
+    display: block;
+    margin: 0 auto;
+}
+
 
 @media (max-width: 968px) {
     .cross-sell__list {
