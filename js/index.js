@@ -2,6 +2,25 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  const getData = (url) => { 
+    return fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Ответ сервера: ' + response.status)
+        }
+        return response.json()
+      })
+  }
+  const shuffle = (arr) => {
+    const result = arr.slice()
+    for (let i = result.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      [result[i], result[j]] = [result[j], result[i]];
+    }
+    return result
+  }
+
+
   const tabs = data => {
     const cardDetailChangeList = document.querySelectorAll('.card-details__change')
     const cardTitleElement = document.querySelector('.card-details__title')
@@ -127,11 +146,40 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-  fetch('tabs.json')
-    .then(response => response.json())
-    .then(json => tabs(json))
+  const renderRelatedProducts = () => {
+    const relatedProductsList = document.querySelector('.cross-sell__list')
+
+    const createRelatedProduct = (item) => {
+      const liElement = document.createElement('li')
+      liElement.innerHTML = `
+        <article class="cross-sell__item">
+          <img class="cross-sell__image" src="${item.photo}" alt="${item.name}">
+          <h3 class="cross-sell__title">${item.name}</h3>
+          <p class="cross-sell__price">${item.price.toLocaleString()}₽</p>
+          <button class="button button_buy cross-sell__button">Купить</button>
+        </article>
+      `
+      return liElement
+    }
+
+    const createRelatedProductsList = (items) => {
+      const randomItems = shuffle(items).slice(0, 4)
+      randomItems.forEach(item => {
+        relatedProductsList.append(createRelatedProduct(item))
+      })
+    }
+
+    getData('cross-sell-dbase/dbase.json')
+      .then(items => createRelatedProductsList(items))
+      .catch(error => alert('Произошла ошибка: ' + error.toString()))
+  }
+
+
+  getData('tabs.json')
+    .then(objects => tabs(objects))
     .catch(error => alert('Произошла ошибка: ' + error.toString()))
 
   accordion()
   modal()
+  renderRelatedProducts()
 })
