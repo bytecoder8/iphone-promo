@@ -86,28 +86,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   const modal = () => {   
-    const modalElement = document.querySelector('.modal')
-    const modalBlock = document.querySelector('.modal__block')
+    const modalRootElement = document.querySelector('.modal')
     const closeButton = document.querySelector('.modal__close')
     const openButton = document.querySelector('.button_buy')
     const titleElement = document.querySelector('.modal__title')
 
-    modalElement.addEventListener('click', () => {
-      modalElement.classList.remove('open')
-    })
-    // Клик по самому блоку модального окна запрещает всплытие до родителя
-    modalBlock.addEventListener('click', event => {
-      event.stopPropagation()
+    const open = () => {
+      modalRootElement.classList.add('open')
+      document.addEventListener('keydown', handleEscapeKey)
+    }
+
+    const close = () => {
+      modalRootElement.classList.remove('open')
+      document.removeEventListener('keydown', handleEscapeKey)
+    }
+
+    const handleEscapeKey = (event) => {
+      if (event.code === 'Escape' || event.key === 'Escape' || event.keyCode === 27) {
+        close()
+      }
+    }
+
+    modalRootElement.addEventListener('click', ({target}) => {
+      if (target === modalRootElement || target === closeButton) {
+        close()
+      }
     })
     
     openButton.addEventListener('click', event => {
       event.preventDefault()
-      modalElement.classList.add('open')
       titleElement.textContent = selectedPhoneTitle
-    })
-    closeButton.addEventListener('click', event => {
-      event.preventDefault()
-      modalElement.classList.remove('open')
+      open()
     })
   }
 
