@@ -64,6 +64,7 @@ button {
 img {
     max-width: 100%;
     height: auto;
+    min-height: 1px; /* IE fix */
 }
 
 a {
@@ -267,6 +268,11 @@ h1, h2, h3, p, ul {
 
 .card__image.active {
     display: block;
+}
+
+/* IE Fix */
+.card__image img {
+    max-width: 300px;
 }
 
 .card-details__title {

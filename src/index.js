@@ -1,5 +1,7 @@
 'use strict';
 
+require('./amenu')
+
 document.addEventListener('DOMContentLoaded', () => {
 
   const getData = (url, handleSuccess, handleError) => { 
@@ -179,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const render = (items) => {
       items.forEach(item => {
-        relatedProductsList.append(createRelatedProduct(item))
+        relatedProductsList.appendChild(createRelatedProduct(item))
       })
     }
 
@@ -203,6 +205,8 @@ document.addEventListener('DOMContentLoaded', () => {
       error => alert(error.toString())
     )
   }
+
+  window.amenu('.header__menu', '.header-menu__list', '.header-menu__item', '.header-menu__burger')
 
   getData(
     'cross-sell-dbase/tabs.json', 
