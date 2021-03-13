@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   getData(
-    'tabs.json', 
+    'cross-sell-dbase/tabs.json', 
     items => tabs(items),
     error => alert(error.toString())
   )
